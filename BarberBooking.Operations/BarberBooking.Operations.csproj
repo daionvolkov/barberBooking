@@ -7,7 +7,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="BusinessManagers" />
+      <ProjectReference Include="..\BarberBooking.Common\BarberBooking.Common.csproj" />
+      <ProjectReference Include="..\BarberBooking.DataAccess\BarberBooking.DataAccess.csproj" />
+      <ProjectReference Include="..\BarberBooking.DataEntities\BarberBooking.DataEntities.csproj" />
     </ItemGroup>
 
 </Project>
