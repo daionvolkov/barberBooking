@@ -1,0 +1,6 @@
+@BarberBooking.WebLauncher_HostAddress = http://localhost:5056
+
+GET {{BarberBooking.WebLauncher_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
