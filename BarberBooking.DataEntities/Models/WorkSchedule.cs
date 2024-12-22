@@ -4,6 +4,7 @@ namespace BarberBooking.Models.Models;
 
 public class WorkSchedule
 {
+    public int Id { get; set; } 
     public int ScheduleId { get; set; } 
     public int BarberId { get; set; } 
     public DaysOfWeekEnumEnum DayOfWeek { get; set; }

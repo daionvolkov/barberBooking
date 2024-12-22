@@ -7,20 +7,19 @@ public class BarberDbContext : DbContext
 {
     public BarberDbContext(DbContextOptions<BarberDbContext> options) : base(options)
     {
-        
     }
-    public DbSet<Appointment> Appointments { get; set; }
-    public virtual DbSet<Barber> Barbers { get; set; }
-    public virtual DbSet<Client> Clients { get; set; }
-    public virtual DbSet<ClientSchedule> ClientSchedules { get; set; }
-    public virtual DbSet<WorkSchedule> WorkSchedules { get; set; }
-    
+
+    public virtual DbSet<Appointment>? Appointments { get; set; }
+    public virtual DbSet<Barber>? Barbers { get; set; }
+    public virtual DbSet<Client>? Clients { get; set; }
+    public virtual DbSet<ClientSchedule>? ClientSchedules { get; set; }
+    public virtual DbSet<WorkSchedule>? WorkSchedules { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Appointment>(entity =>
         {
             entity.HasKey(e => e.Id);
-
             entity.ToTable("appointments");
 
             entity.Property(e => e.Id).HasColumnName("id");
@@ -30,14 +29,96 @@ public class BarberDbContext : DbContext
             entity.Property(e => e.ScheduledDate).HasColumnName("scheduled_date");
             entity.Property(e => e.Status).HasColumnName("status");
             entity.Property(e => e.CreatedAt).HasColumnName("created_at");
-            
+
             modelBuilder.Entity<Appointment>()
                 .HasMany(a => a.ClientSchedules)
                 .WithOne(cs => cs.Appointment)
                 .HasForeignKey(cs => cs.AppointmentId)
                 .OnDelete(DeleteBehavior.Cascade);
         });
+
+        modelBuilder.Entity<Barber>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.ToTable("barbers");
+            
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.FullName).HasColumnName("full_name");
+            entity.Property(e => e.Specialization).HasColumnName("specialization");
+            entity.Property(e => e.PhoneNumber).HasColumnName("phone_number");
+            entity.Property(e => e.Email).HasColumnName("email");
+            entity.Property(e => e.ExperienceYears).HasColumnName("experience_years");
+            entity.Property(e => e.CreatedAt).HasColumnName("created_at");
+            modelBuilder.Entity<Barber>()
+                .HasMany(b => b.Appointments)
+                .WithOne(a => a.Barber)
+                .HasForeignKey(a => a.BarberId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+
+
+        });
+
+        modelBuilder.Entity<Client>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.ToTable("clients");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.FirstName).HasColumnName("first_name");
+            entity.Property(e => e.LastName).HasColumnName("last_name");
+            entity.Property(e => e.PhoneNumber).HasColumnName("phone_number");
+            entity.Property(e => e.Email).HasColumnName("email");
+            entity.Property(e => e.CreatedAt).HasColumnName("created_at");
+
+            modelBuilder.Entity<Client>()
+                .HasMany(c => c.Appointments)
+                .WithOne(a => a.Client)
+                .HasForeignKey(a => a.ClientId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        modelBuilder.Entity<ClientSchedule>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.ToTable("client_schedules"); // Таблица для ClientSchedule
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.AppointmentId).HasColumnName("appointment_id");
+            entity.Property(e => e.StartTime).HasColumnName("start_time");
+            entity.Property(e => e.EndTime).HasColumnName("end_time");
+
+            // Связь с Appointment
+            entity.HasOne(e => e.Appointment)
+                .WithMany(a => a.ClientSchedules)
+                .HasForeignKey(e => e.AppointmentId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+        
+        modelBuilder.Entity<WorkSchedule>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.ToTable("work_schedules"); // Таблица для WorkSchedule
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.ScheduleId).HasColumnName("schedule_id");
+            entity.Property(e => e.BarberId).HasColumnName("barber_id");
+            entity.Property(e => e.DayOfWeek).HasColumnName("day_of_week");
+            entity.Property(e => e.StartTime).HasColumnName("start_time");
+            entity.Property(e => e.EndTime).HasColumnName("end_time");
+
+            // Связь с Barber
+            entity.HasOne(e => e.Barber)
+                .WithMany(b => b.WorkSchedules)
+                .HasForeignKey(e => e.BarberId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        
+        
+        OnModelCreatingPartial(modelBuilder);
     }
 
-
+    private static void OnModelCreatingPartial(ModelBuilder modelBuilder)
+    {
+        
+    }
 }
