@@ -3,6 +3,8 @@ using BarberBooking.DataAccess.AppContext;
 using BarberBooking.Models.Dto;
 using BarberBooking.Models.Models;
 using BarberBooking.Operations.BusinessManagers;
+using BarberBooking.Operations.BusinessObjects;
+using BarberBooking.WebLauncher.Requests;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BarberBooking.WebLauncher.Controllers;
@@ -21,21 +23,73 @@ public class ClientController : ControllerBase
     }
 
     [HttpGet]
-    public ActionResult Test()
+    public async Task<ActionResult<IEnumerable<DtoClient>>> GetClients()
     {
-        return Ok($"server started {DateTime.Now}");
+        var clients = await _clientManager.GetClients();
+        var result = clients.Select(c =>
+        {
+            var dtoClient = ObjectCopier.CopyProperties<Client, DtoClient>(c);
+
+            if (c.Appointments != null)
+            {
+                dtoClient.Appointments = c.Appointments.Select(a =>
+                    ObjectCopier.CopyProperties<Appointment, DtoAppointment>(a)).ToList();
+            }
+            return dtoClient;
+        });
+        return Ok(result);
     }
-    
+
+
     [HttpGet("{id}")]
     public async Task<ActionResult<DtoClient>> GetClientById(int id)
     {
         var client = await _clientManager.GetClientByIdAsync(id);
         if (client == null)
         {
-            return BadRequest("Client not found");
+            return NotFound($"Client with ID: {id} not found");
         }
 
         var result = ObjectCopier.CopyProperties<Client, DtoClient>(client);
+        if(client.Appointments != null)
+        {
+            result.Appointments = client.Appointments
+                .Select(a => ObjectCopier.CopyProperties<Appointment, DtoAppointment>(a)).ToList();
+        }
+        return Ok(result);
+    }
+
+
+    [HttpPost]
+    public async Task<ActionResult<DtoClient>> CreateClient(ClientCreateRequest request) 
+    {
+        var client = ObjectCopier.CopyProperties<ClientCreateRequest, BoClient>(request);
+        var result = await _clientManager.CreateClientAsync(client);
+        return Ok(result);
+    }
+
+
+    [HttpPut("{id}")]
+    public async Task<ActionResult<DtoClient>> UpdateClient(int id, [FromBody] ClientUpdateRequest request)
+    {
+        var client = ObjectCopier.CopyProperties<ClientUpdateRequest, BoClient>(request);
+        var result = await _clientManager.UpdateClientAsync(id, client);
+        if(result == null)
+        {
+            return NotFound($"Client with ID: {id} not found");
+        }
+        return Ok(result);
+    }
+
+
+    [HttpDelete("{id}")]
+    public async Task<ActionResult<bool>> DeleteClient(int id)
+    {
+        var result = await _clientManager.DeleteClientAsync(id);
+        if(result == false)
+        {
+            return NotFound($"Client with ID: {id} not found");
+        }
         return Ok(result);
     }
 }
