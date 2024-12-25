@@ -1,5 +1,3 @@
-using BarberBooking.Models.Models;
-
 namespace BarberBooking.Models.Dto;
 
 public class DtoClient
@@ -11,5 +9,5 @@ public class DtoClient
     public string? Email { get; set; } 
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
-    public ICollection<Appointment>? Appointments { get; set; } = new List<Appointment>();
+    public ICollection<DtoAppointment>? Appointments { get; set; } = [];
 }
