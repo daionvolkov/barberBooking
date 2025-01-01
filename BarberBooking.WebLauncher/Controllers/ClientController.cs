@@ -21,7 +21,7 @@ public class ClientController : ControllerBase
         _context = context;
         _clientManager = new ClientManager(context);
     }
-
+    
     [HttpGet]
     public async Task<ActionResult<IEnumerable<DtoClient>>> GetClients()
     {
@@ -32,8 +32,7 @@ public class ClientController : ControllerBase
 
             if (c.Appointments != null)
             {
-                dtoClient.Appointments = c.Appointments.Select(a =>
-                    ObjectCopier.CopyProperties<Appointment, DtoAppointment>(a)).ToList();
+                dtoClient.Appointments = c.Appointments.Select(ObjectCopier.CopyProperties<Appointment, DtoAppointment>).ToList();
             }
             return dtoClient;
         });
