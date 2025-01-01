@@ -7,9 +7,9 @@ public class WorkSchedule
     public int Id { get; set; } 
     public int ScheduleId { get; set; } 
     public int BarberId { get; set; } 
-    public DaysOfWeekEnumEnum DayOfWeek { get; set; }
-    public TimeSpan StartTime { get; set; }
-    public TimeSpan EndTime { get; set; } 
+    public string? DayOfWeek { get; set; }
+    public DateTime StartTime { get; set; }
+    public DateTime EndTime { get; set; } 
     
     public Barber? Barber { get; set; }
 }

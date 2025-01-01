@@ -7,7 +7,7 @@ public class DtoClient
     public string LastName { get; set; } = null!; 
     public string PhoneNumber { get; set; } = null!; 
     public string? Email { get; set; } 
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime CreatedAt { get; set; }
 
-    public ICollection<DtoAppointment>? Appointments { get; set; } = [];
+    public ICollection<DtoAppointment>? Appointments { get; set; } = new List<DtoAppointment>();
 }
