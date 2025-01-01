@@ -26,12 +26,18 @@ public class BarberDbContext : DbContext
             entity.Property(e => e.ClientId).HasColumnName("client_id");
             entity.Property(e => e.BarberId).HasColumnName("barber_id");
             entity.Property(e => e.ServiceDescription).HasColumnName("service_description");
-            entity.Property(e => e.ScheduledDate).HasColumnName("scheduled_date");
-            entity.Property(e => e.Status).HasColumnName("status");
-            entity.Property(e => e.CreatedAt).HasColumnName("created_at");
+            entity.Property(e => e.ScheduledDate)
+                .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("scheduled_date");
+            entity.Property(e => e.Status)
+                .HasColumnName("status");
+            entity.Property(e => e.CreatedAt)
+                .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("created_at");
 
-            modelBuilder.Entity<Appointment>()
-                .HasMany(a => a.ClientSchedules)
+            entity.HasMany(a => a.ClientSchedules)
                 .WithOne(cs => cs.Appointment)
                 .HasForeignKey(cs => cs.AppointmentId)
                 .OnDelete(DeleteBehavior.Cascade);
@@ -48,9 +54,12 @@ public class BarberDbContext : DbContext
             entity.Property(e => e.PhoneNumber).HasColumnName("phone_number");
             entity.Property(e => e.Email).HasColumnName("email");
             entity.Property(e => e.ExperienceYears).HasColumnName("experience_years");
-            entity.Property(e => e.CreatedAt).HasColumnName("created_at");
-            modelBuilder.Entity<Barber>()
-                .HasMany(b => b.Appointments)
+            entity.Property(e => e.CreatedAt)
+                .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                .HasColumnType("timestamp with time zone")
+                .HasColumnName("created_at");
+            
+            entity.HasMany(b => b.Appointments)
                 .WithOne(a => a.Barber)
                 .HasForeignKey(a => a.BarberId)
                 .OnDelete(DeleteBehavior.Cascade);
@@ -69,10 +78,12 @@ public class BarberDbContext : DbContext
             entity.Property(e => e.LastName).HasColumnName("last_name");
             entity.Property(e => e.PhoneNumber).HasColumnName("phone_number");
             entity.Property(e => e.Email).HasColumnName("email");
-            entity.Property(e => e.CreatedAt).HasColumnName("created_at");
+            entity.Property(e => e.CreatedAt)
+                .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                .HasColumnType("timestamp with time zone")
+                .HasColumnName("created_at");
 
-            modelBuilder.Entity<Client>()
-                .HasMany(c => c.Appointments)
+            entity.HasMany(d => d.Appointments)
                 .WithOne(a => a.Client)
                 .HasForeignKey(a => a.ClientId)
                 .OnDelete(DeleteBehavior.Cascade);
@@ -81,13 +92,18 @@ public class BarberDbContext : DbContext
         modelBuilder.Entity<ClientSchedule>(entity =>
         {
             entity.HasKey(e => e.Id);
-            entity.ToTable("client_schedules"); // Таблица для ClientSchedule
+            entity.ToTable("client_schedules"); 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.AppointmentId).HasColumnName("appointment_id");
-            entity.Property(e => e.StartTime).HasColumnName("start_time");
-            entity.Property(e => e.EndTime).HasColumnName("end_time");
+            entity.Property(e => e.StartTime)
+                .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                .HasColumnType("timestamp with time zone")
+               .HasColumnName("start_time");
+            entity.Property(e => e.EndTime)
+                .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                .HasColumnType("timestamp with time zone")
+                .HasColumnName("end_time");
 
-            // Связь с Appointment
             entity.HasOne(e => e.Appointment)
                 .WithMany(a => a.ClientSchedules)
                 .HasForeignKey(e => e.AppointmentId)
@@ -97,15 +113,20 @@ public class BarberDbContext : DbContext
         modelBuilder.Entity<WorkSchedule>(entity =>
         {
             entity.HasKey(e => e.Id);
-            entity.ToTable("work_schedules"); // Таблица для WorkSchedule
+            entity.ToTable("work_schedules"); 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.ScheduleId).HasColumnName("schedule_id");
             entity.Property(e => e.BarberId).HasColumnName("barber_id");
             entity.Property(e => e.DayOfWeek).HasColumnName("day_of_week");
-            entity.Property(e => e.StartTime).HasColumnName("start_time");
-            entity.Property(e => e.EndTime).HasColumnName("end_time");
+            entity.Property(e => e.StartTime)
+                .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                .HasColumnType("timestamp with time zone")
+               .HasColumnName("start_time");
+            entity.Property(e => e.EndTime)
+                .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                .HasColumnType("timestamp with time zone")
+               .HasColumnName("end_time");
 
-            // Связь с Barber
             entity.HasOne(e => e.Barber)
                 .WithMany(b => b.WorkSchedules)
                 .HasForeignKey(e => e.BarberId)
