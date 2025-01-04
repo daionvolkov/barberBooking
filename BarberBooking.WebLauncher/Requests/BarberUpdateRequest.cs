@@ -2,7 +2,7 @@
 
 namespace BarberBooking.WebLauncher.Requests
 {
-    public class ClientUpdateRequest : HumanCommonRequest
+    public class BarberUpdateRequest : HumanCommonRequest
     {
 
     }
