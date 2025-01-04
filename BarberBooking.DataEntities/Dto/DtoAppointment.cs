@@ -12,9 +12,9 @@ namespace BarberBooking.Models.Dto
         public int Id { get; set; }
         public int ClientId { get; set; }
         public int BarberId { get; set; }
-        public ServiceDescriptionEnum ServiceDescription { get; set; }
+        public string? ServiceDescription { get; set; }
         public DateTime ScheduledDate { get; set; }
-        public AppointmentStatusEnum Status { get; set; } = AppointmentStatusEnum.Pending;
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public string Status { get; set; } = AppointmentStatusEnum.Pending.ToString();
+        public DateTime CreatedAt { get; set; }
     }
 }
