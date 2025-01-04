@@ -40,7 +40,7 @@ public class ClientController : ControllerBase
     }
 
 
-    [HttpGet("{id}")]
+    [HttpGet("{id:int}")]
     public async Task<ActionResult<DtoClient>> GetClientById(int id)
     {
         var client = await _clientManager.GetClientByIdAsync(id);
@@ -63,12 +63,14 @@ public class ClientController : ControllerBase
     public async Task<ActionResult<DtoClient>> CreateClient(ClientCreateRequest request) 
     {
         var client = ObjectCopier.CopyProperties<ClientCreateRequest, BoClient>(request);
-        var result = await _clientManager.CreateClientAsync(client);
+        var createdClient = await _clientManager.CreateClientAsync(client);
+        var result = ObjectCopier.CopyProperties<Client, DtoClient>(createdClient);
+
         return Ok(result);
     }
 
 
-    [HttpPut("{id}")]
+    [HttpPut("{id:int}")]
     public async Task<ActionResult<DtoClient>> UpdateClient(int id, [FromBody] ClientUpdateRequest request)
     {
         var client = ObjectCopier.CopyProperties<ClientUpdateRequest, BoClient>(request);
@@ -81,7 +83,7 @@ public class ClientController : ControllerBase
     }
 
 
-    [HttpDelete("{id}")]
+    [HttpDelete("{id:int}")]
     public async Task<ActionResult<bool>> DeleteClient(int id)
     {
         var result = await _clientManager.DeleteClientAsync(id);
