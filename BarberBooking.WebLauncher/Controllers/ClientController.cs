@@ -25,7 +25,7 @@ public class ClientController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<DtoClient>>> GetClients()
     {
-        var clients = await _clientManager.GetClients();
+        var clients = await _clientManager.GetClientsAsync();
         var result = clients.Select(c =>
         {
             var dtoClient = ObjectCopier.CopyProperties<Client, DtoClient>(c);

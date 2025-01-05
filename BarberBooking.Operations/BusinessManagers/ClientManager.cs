@@ -15,7 +15,7 @@ public class ClientManager
         _context = context;
     }
 
-    public async Task<IEnumerable<Client>> GetClients()
+    public async Task<IEnumerable<Client>> GetClientsAsync()
     {
         var clients = await _context.Clients!
             .Include(c => c.Appointments)

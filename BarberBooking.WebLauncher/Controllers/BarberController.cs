@@ -24,7 +24,7 @@ public class BarberController : Controller
     [HttpGet]
     public async Task<ActionResult<IEnumerable<DtoBarber>>> GetBarbers()
     {
-        var barbers = await _barberManager.GetBarbers();
+        var barbers = await _barberManager.GetBarbersAsync();
         var result = barbers.Select(b =>
         {
             var dtoBarbers = ObjectCopier.CopyProperties<Barber, DtoBarber>(b);

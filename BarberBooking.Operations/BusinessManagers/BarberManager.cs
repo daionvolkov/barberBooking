@@ -15,7 +15,7 @@ public class BarberManager
         _context = context;
     }
     
-    public async Task<IEnumerable<Barber>> GetBarbers()
+    public async Task<IEnumerable<Barber>> GetBarbersAsync()
     {
         var barbers = await _context.Barbers!
             .Include(b => b.Appointments)

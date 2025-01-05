@@ -1,24 +1,19 @@
 ﻿using BarberBooking.Common.Enums;
-using BarberBooking.Models.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BarberBooking.Models.Dto
+namespace BarberBooking.Operations.BusinessObjects
 {
-    public class DtoAppointment
+    public class BoAppointment
     {
-        public int Id { get; set; }
         public int ClientId { get; set; }
         public int BarberId { get; set; }
-        public string? ServiceDescription { get; set; }
+        public string ServiceDescription { get; set; } = null!;
         public DateTime ScheduledDate { get; set; }
         public string Status { get; set; } = AppointmentStatusEnum.Pending.ToString();
-        public DateTime CreatedAt { get; set; }
-
-        public ICollection<DtoClientSchedule>? ClientSchedules { get; set; } = new List<DtoClientSchedule>();
-
+     
     }
 }

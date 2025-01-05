@@ -6,6 +6,6 @@ public class ClientSchedule
     public int AppointmentId { get; set; }
     public DateTime StartTime { get; set; }
     public DateTime EndTime { get; set; } 
-    
+
     public Appointment? Appointment { get; set; }
 }
