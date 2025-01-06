@@ -52,12 +52,17 @@ public class ClientScheduleController : Controller
     [HttpPost]
     public async Task<ActionResult<DtoClient>> CreateClient([FromBody] ClientScheduleRequest request) 
     {
+        
         var appointment = await _appointmentManager.GetAppointmentByIdAsync(request.AppointmentId);
         if (appointment == null)
         {
             return NotFound($"You don't add to a client's schedule for an appointment that doesn't exist");
         }
-        
+        var isDateTimeValid = DateTimeValidator.AreDatesValid(request.StartTime, request.EndTime);
+        if (!isDateTimeValid)
+        {
+            return BadRequest("Invalid start time or end time");
+        }
         var client = ObjectCopier.CopyProperties<ClientScheduleRequest, BoClientSchedule>(request);
         var createdClientSchedule = await _clientScheduleManager.CreateClientScheduleAsync(client);
         var result = ObjectCopier.CopyProperties<ClientSchedule, DtoClientSchedule>(createdClientSchedule);
@@ -74,6 +79,11 @@ public class ClientScheduleController : Controller
         {
             return NotFound($"You don't add to a client's schedule for an appointment that doesn't exist\n " +
                             $".Appointment with ID: {id} not found");
+        }
+        var isDateTimeValid = DateTimeValidator.AreDatesValid(request.StartTime, request.EndTime);
+        if (!isDateTimeValid)
+        {
+            return BadRequest("Invalid start time or end time");
         }
         var clientSchedule = ObjectCopier.CopyProperties<ClientScheduleRequest, BoClientSchedule>(request);
         var updatedClientSchedule = await _clientScheduleManager.UpdateClientScheduleAsync(id, clientSchedule);
