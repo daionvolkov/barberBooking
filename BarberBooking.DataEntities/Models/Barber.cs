@@ -4,9 +4,9 @@ namespace BarberBooking.Models.Models;
 
 public class Barber
 {
-    public int Id { get; set; } 
-    public string FullName { get; set; } = null!;
-    public string? Specialization { get; set; } 
+    public int Id { get; init; } 
+    public string FullName { get; init; } = null!;
+    public string? Specialization { get; init; } 
     public string PhoneNumber { get; set; } = null!;
     public string? Email { get; set; } 
     public int ExperienceYears { get; set; } = 0;
