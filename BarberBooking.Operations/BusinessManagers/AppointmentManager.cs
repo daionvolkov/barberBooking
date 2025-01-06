@@ -81,5 +81,7 @@ namespace BarberBooking.Operations.BusinessManagers
             await _context.SaveChangesAsync();
             return true;
         }
+
+       
     }
 }
