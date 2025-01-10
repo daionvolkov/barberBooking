@@ -7,4 +7,9 @@ public static class DateTimeValidator
         var result = startTime.Date == endTime.Date && startTime < endTime;;
         return result;
     }
+    
+    public static bool AreTimesValid(TimeSpan startTime, TimeSpan endTime)
+    {
+        return startTime < endTime;
+    }
 }

@@ -55,6 +55,11 @@ namespace BarberBooking.WebLauncher.Controllers
         [HttpPost]
         public async Task<ActionResult<DtoWorkSchedule>> CreateWorkSchedule(WorkScheduleRequest request)
         {
+            var isTimeCorrect = DateTimeValidator.AreTimesValid(request.StartTime, request.EndTime);
+            if (!isTimeCorrect)
+            {
+                return BadRequest("Start time or End time is invalid");
+            }
             var workSchedule = ObjectCopier.CopyProperties<WorkScheduleRequest, BoWorkSchedule>(request);
             var createdBarber = await _workScheduleManager.CreateWorkScheduleAsync(workSchedule);
             var result = ObjectCopier.CopyProperties<WorkSchedule, DtoWorkSchedule>(createdBarber);
@@ -66,6 +71,11 @@ namespace BarberBooking.WebLauncher.Controllers
         [HttpPut("{id:int}")]
         public async Task<ActionResult<DtoBarber>> UpdateWorkSchedule(int id, [FromBody] WorkScheduleRequest request)
         {
+            var isTimeCorrect = DateTimeValidator.AreTimesValid(request.StartTime, request.EndTime);
+            if (!isTimeCorrect)
+            {
+                return BadRequest("Start time or End time is invalid");
+            }
             var workSchedule = ObjectCopier.CopyProperties<WorkScheduleRequest, BoWorkSchedule>(request);
             var updatedworkSchedule = await _workScheduleManager.UpdateWorkScheduleAsync(id, workSchedule);
             if (updatedworkSchedule == null)
