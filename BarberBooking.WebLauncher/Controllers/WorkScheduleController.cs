@@ -1,4 +1,3 @@
-
 using BarberBooking.Common.Helpers;
 using BarberBooking.DataAccess.AppContext;
 using BarberBooking.Models.Dto;
@@ -33,7 +32,6 @@ namespace BarberBooking.WebLauncher.Controllers
             {
                 var dtoworkSchedules = ObjectCopier.CopyProperties<WorkSchedule, DtoWorkSchedule>(ws);
 
-               
                 return dtoworkSchedules;
             });
             return Ok(result);
@@ -60,6 +58,11 @@ namespace BarberBooking.WebLauncher.Controllers
             {
                 return BadRequest("Start time or End time is invalid");
             }
+            var isBarberExists = await HumanValidator.ExistsAsync<Barber>(_context, request.BarberId);
+            if(!isBarberExists)
+            {
+                return BadRequest($"Barber with ID: {request.BarberId} does not exists.");
+            }
             var workSchedule = ObjectCopier.CopyProperties<WorkScheduleRequest, BoWorkSchedule>(request);
             var createdBarber = await _workScheduleManager.CreateWorkScheduleAsync(workSchedule);
             var result = ObjectCopier.CopyProperties<WorkSchedule, DtoWorkSchedule>(createdBarber);
@@ -76,6 +79,12 @@ namespace BarberBooking.WebLauncher.Controllers
             {
                 return BadRequest("Start time or End time is invalid");
             }
+            var isBarberExists = await HumanValidator.ExistsAsync<Barber>(_context, request.BarberId);
+            if (!isBarberExists)
+            {
+                return BadRequest($"Barber with ID: {request.BarberId} does not exists.");
+            }
+
             var workSchedule = ObjectCopier.CopyProperties<WorkScheduleRequest, BoWorkSchedule>(request);
             var updatedworkSchedule = await _workScheduleManager.UpdateWorkScheduleAsync(id, workSchedule);
             if (updatedworkSchedule == null)

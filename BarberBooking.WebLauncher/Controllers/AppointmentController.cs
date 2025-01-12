@@ -67,6 +67,13 @@ namespace BarberBooking.WebLauncher.Controllers
         [HttpPost]
         public async Task<ActionResult<DtoAppointment>> CreateAppointment(AppointmentCreateRequest request)
         {
+            var isBarberExists = await HumanValidator.ExistsAsync<Barber>(_context, request.BarberId);
+            var isClientExists = await HumanValidator.ExistsAsync<Client>(_context, request.ClientId);
+            if(!isBarberExists || isClientExists)
+            {
+                return BadRequest($"Barber with ID: {request.BarberId} or client with ID {request.ClientId} does not exists.");  
+            }
+
             var appointment = ObjectCopier.CopyProperties<AppointmentCreateRequest, BoAppointment>(request);
             var createdAppointment = await _appointmentManager.CreateAppointmentAsync(appointment);
             var result = ObjectCopier.CopyProperties<Appointment, DtoAppointment>(createdAppointment);
@@ -78,6 +85,11 @@ namespace BarberBooking.WebLauncher.Controllers
         [HttpPut("{id:int}")]
         public async Task<ActionResult<DtoAppointment>> UpdateAppointment(int id, [FromBody] AppointmentUpdateRequest request)
         {
+            var isBarberExists = await HumanValidator.ExistsAsync<Barber>(_context, request.BarberId);
+            if (!isBarberExists)
+            {
+                return BadRequest($"Barber with ID: {request.BarberId}  does not exists.");
+            }
             var appointment = ObjectCopier.CopyProperties<AppointmentUpdateRequest, BoAppointment>(request);
             var result = await _appointmentManager.UpdateAppointmentAsync(id, appointment);
             if (result == null)
