@@ -37,6 +37,7 @@ namespace BarberBooking.WebLauncher.Controllers
             return Ok(result);
         }
 
+        
         [HttpGet("{id:int}")]
         public async Task<ActionResult<DtoWorkSchedule>> GetWorkScheduleById(int id)
         {
